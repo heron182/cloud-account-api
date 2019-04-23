@@ -22,7 +22,6 @@ type Account struct {
 
 // Create Creates an Account
 func (acc *Account) Create() (*mongo.InsertOneResult, error) {
-	collection := db.Database("accounts").Collection("accounts")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -32,32 +31,30 @@ func (acc *Account) Create() (*mongo.InsertOneResult, error) {
 		log.Fatal(err)
 	}
 
-	return collection.InsertOne(ctx, acc)
+	return accountCollection.InsertOne(ctx, acc)
 }
 
 // Get an account by ID
 func (acc *Account) Get(id primitive.ObjectID) error {
-	collection := db.Database("accounts").Collection("accounts")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	return collection.FindOne(ctx, bson.M{"_id": id}).Decode(acc)
+	return accountCollection.FindOne(ctx, bson.M{"_id": id}).Decode(acc)
 }
 
 // CheckCredentials check if provided credentials exists in db
 func (acc *Account) CheckCredentials() error {
-	collection := db.Database("accounts").Collection("accounts")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	plainPassword := acc.Password
 
-	if err := collection.FindOne(ctx, bson.M{"email": acc.Email}).Decode(acc); err != nil {
-		return errors.New("Invalid email/password")
+	if err := accountCollection.FindOne(ctx, bson.M{"email": acc.Email}).Decode(acc); err != nil {
+		return errors.New("Invalid email")
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(acc.Password), []byte(plainPassword)); err != nil {
-		return errors.New("Invalid email/password")
+		return errors.New("Invalid password")
 	}
 
 	return nil

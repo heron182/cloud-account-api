@@ -20,6 +20,12 @@
   version = "v1.7.1"
 
 [[projects]]
+  name = "github.com/joho/godotenv"
+  packages = ["."]
+  revision = "23d116af351c84513e1946b527c88823e476be13"
+  version = "v1.3.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/xdg/scram"
   packages = ["."]
@@ -41,13 +47,13 @@
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["bcrypt","blowfish","pbkdf2"]
-  revision = "df01cb2cc480549d72034218dd98bf97671450ac"
+  revision = "d864b10871cd4370fe574816b489c819c675ccc7"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sync"
   packages = ["semaphore"]
-  revision = "56d357773e8497dfd526f0727e187720d1093757"
+  revision = "112230192c580c3556b8cee6403af37a4fc5f28c"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -58,6 +64,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "8014e091dcca0bf08a79edcc221710fa636bc68e6579cdf2eedf27679cac6051"
+  inputs-digest = "43c0dfe4a1d34acb1e065cc244d3583382b58acad6ae2cfabf9ed46675f0f78b"
   solver-name = "gps-cdcl"
   solver-version = 1

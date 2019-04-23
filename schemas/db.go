@@ -10,21 +10,29 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
-var db *mongo.Client
+const (
+	databaseName          string = "accounts"
+	accountCollectionName string = "accounts"
+)
+
+// Db is the main database interface
+var Db *mongo.Client
+var accountCollection *mongo.Collection
 
 // InitDb starts db connections
-func InitDb() {
+func InitDb(databaseURI string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	var err error
-	db, err = mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
+	Db, err = mongo.Connect(ctx, options.Client().ApplyURI(databaseURI))
+	accountCollection = Db.Database(databaseName).Collection(accountCollectionName)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if err = db.Ping(ctx, readpref.Primary()); err != nil {
+	if err = Db.Ping(ctx, readpref.Primary()); err != nil {
 		log.Fatal(err)
 	}
 
