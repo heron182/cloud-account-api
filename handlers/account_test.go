@@ -4,14 +4,17 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"testing"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/heron182/cloud-account-api/schemas"
 	"github.com/joho/godotenv"
 )
@@ -37,15 +40,21 @@ func TestMain(m *testing.M) {
 	tearDown()
 }
 
+func makeRequest(req *http.Request, handlerFunc http.HandlerFunc) *httptest.ResponseRecorder {
+	rr := httptest.NewRecorder()
+
+	handler := http.HandlerFunc(handlerFunc)
+	handler.ServeHTTP(rr, req)
+
+	return rr
+}
+
 func TestCreateAccount(t *testing.T) {
 	defer tearDown()
 	payload := []byte(`{"name": "John", "email": "john@createme.com", "password": "123pass"}`)
 
 	req, _ := http.NewRequest("POST", "/accounts", bytes.NewReader(payload))
-	rr := httptest.NewRecorder()
-
-	handler := http.HandlerFunc(CreateAccount)
-	handler.ServeHTTP(rr, req)
+	rr := makeRequest(req, CreateAccount)
 
 	if status := rr.Code; status != http.StatusCreated {
 		t.Errorf("TestCreateAccount failed. Expected status %d, got %d", http.StatusCreated, status)
@@ -70,11 +79,25 @@ func TestLoginAccount(t *testing.T) {
 	plainPassword := "mYpass"
 
 	acc := schemas.Account{Name: "Johnny", Password: plainPassword, Email: "jonny@email.com"}
-	acc.Create() // Password is mutated to a hash
+	acc.Create()
 
-	acc.Password = plainPassword
-	if err := acc.CheckCredentials(); err != nil {
-		t.Errorf("TestLoginAccount failed - %s", err)
+	payload := []byte(fmt.Sprintf(`{"email": "jonny@email.com", "password": "%s"}`, plainPassword))
+	req, _ := http.NewRequest("POST", "/accounts/login", bytes.NewReader(payload))
+	rr := makeRequest(req, LoginAccount)
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"email": acc.Email,
+		"iat":   time.Now().Unix(),
+	})
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("TestLoginAccount failed. Expected status %d - found %d", status, http.StatusOK)
+	}
+
+	var result map[string]interface{}
+	json.Unmarshal(rr.Body.Bytes(), &result)
+	if signedToken, _ := token.SignedString([]byte(os.Getenv("MYSECRET"))); signedToken != result["token"] {
+		t.Errorf("TestLoginAccount failed. JWT tokens differ. Generated %s - Received %s", signedToken, result["token"])
 	}
 
 }

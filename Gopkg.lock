@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/dgrijalva/jwt-go"
+  packages = ["."]
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
+
+[[projects]]
   name = "github.com/go-stack/stack"
   packages = ["."]
   revision = "2fee6af1a9795aafbe0253a0cfbdf668e1fb8a9a"
@@ -64,6 +70,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "43c0dfe4a1d34acb1e065cc244d3583382b58acad6ae2cfabf9ed46675f0f78b"
+  inputs-digest = "beedd3b3fe71b08a2cf537c44c5cdfc63eeb44740ac5709f55ff6a0cb4d09702"
   solver-name = "gps-cdcl"
   solver-version = 1

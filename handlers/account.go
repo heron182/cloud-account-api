@@ -4,7 +4,10 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
+	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	"github.com/heron182/cloud-account-api/schemas"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -57,6 +60,12 @@ func LoginAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"email": account.Email,
+		"iat":   time.Now().Unix(),
+	})
+
+	signedToken, _ := token.SignedString([]byte(os.Getenv("MYSECRET")))
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(account)
+	w.Write([]byte(`{ "token": "` + signedToken + `" }`))
 }
