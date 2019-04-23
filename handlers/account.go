@@ -15,14 +15,14 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 	var account schemas.Account
 	json.NewDecoder(r.Body).Decode(&account)
 
-	if result, err := account.Create(); err != nil {
+	if err := account.Create(); err != nil {
 		log.Fatal(err)
 	} else {
 
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
 
-		json.NewEncoder(w).Encode(result)
+		json.NewEncoder(w).Encode(&account)
 
 	}
 

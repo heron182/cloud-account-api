@@ -56,7 +56,7 @@ func TestCreateAccount(t *testing.T) {
 		t.Error(err)
 	}
 
-	id, _ := primitive.ObjectIDFromHex(response["InsertedID"].(string))
+	id, _ := primitive.ObjectIDFromHex(response["id"].(string))
 
 	var acc schemas.Account
 	if err := acc.Get(id); err != nil {

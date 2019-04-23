@@ -8,7 +8,6 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -21,7 +20,7 @@ type Account struct {
 }
 
 // Create Creates an Account
-func (acc *Account) Create() (*mongo.InsertOneResult, error) {
+func (acc *Account) Create() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -31,7 +30,12 @@ func (acc *Account) Create() (*mongo.InsertOneResult, error) {
 		log.Fatal(err)
 	}
 
-	return accountCollection.InsertOne(ctx, acc)
+	_, err := accountCollection.InsertOne(ctx, acc)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // Get an account by ID

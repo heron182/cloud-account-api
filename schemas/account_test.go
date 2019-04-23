@@ -35,14 +35,14 @@ func TestMain(m *testing.M) {
 
 }
 
-func TestCreateAccount(t *testing.T) {
+func TestCreate(t *testing.T) {
 	defer tearDown()
 
 	acc := Account{Name: "John", Email: "john@example.com", Password: "123pass"}
-	_, err := acc.Create()
+	err := acc.Create()
 
 	if err != nil {
-		t.Errorf("TestCreateAccount failed - %s", err)
+		t.Errorf("TestCreate failed - %s", err)
 	}
 
 	err = accountCollection.
