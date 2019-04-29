@@ -1,0 +1,15 @@
+FROM golang:1.12.4-stretch
+
+
+ADD . $GOPATH/src/github/heron182/cloud-account-api
+
+WORKDIR $GOPATH/src/github/heron182/cloud-account-api
+
+# install go dep
+RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+
+RUN dep ensure
+
+ENTRYPOINT [ "go" ]
+
+CMD [ "run", "main.go" ]

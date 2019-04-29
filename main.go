@@ -15,11 +15,10 @@ import (
 
 var client *mongo.Client
 
-
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Print("-- No .env file encountered in the root project folder")
+		log.Print("-- No .env file encountered in the root project folder\nMake sure to inject proper environment variables.")
 	}
 
 	schemas.InitDb(os.Getenv("DATABASE_URI"))
