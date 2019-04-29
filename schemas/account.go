@@ -66,7 +66,8 @@ func (acc *Account) CheckCredentials() error {
 
 // HashPassword hashes a plain password and assigns to Password
 func (acc *Account) hashPassword() error {
-	hashedPwd, err := bcrypt.GenerateFromPassword([]byte(acc.Password), 14)
+	cost := 5
+	hashedPwd, err := bcrypt.GenerateFromPassword([]byte(acc.Password), cost)
 	acc.Password = string(hashedPwd)
 
 	return err
