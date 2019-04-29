@@ -38,8 +38,9 @@ Account collection
 
 + Request Create Account (application/json)
     + Attributes
-        +  Account Request
+        + email: johndoe@example.com (string, required) - User email
+        + password: $2a$14$GXNIJWf976sce (string, required) - User hashed password
 
 + Response 201
     + Attributes
-        +  Account Response
+        +  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6 (string) - JWT signed token
