@@ -1,4 +1,4 @@
 
 
 test:
-	go test -v ./schemas ./handlers
+	go test -v -p 1 ./schemas ./handlers
