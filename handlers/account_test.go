@@ -69,7 +69,7 @@ func TestCreateAccount(t *testing.T) {
 
 	var acc schemas.Account
 	if err := acc.Get(id); err != nil {
-		t.Errorf("TestCreateAccount failed - %s", err)
+		t.Errorf("TestCreateAccount failed. Expected document to return - %s", err)
 	}
 
 }

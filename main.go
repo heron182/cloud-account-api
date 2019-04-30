@@ -27,6 +27,8 @@ func main() {
 	router.HandleFunc("/accounts", handlers.CreateAccount).Methods("POST")
 	router.HandleFunc("/accounts/login", handlers.LoginAccount).Methods("POST")
 	router.HandleFunc("/accounts/{id}", handlers.GetAccount).Methods("GET")
+	router.NotFoundHandler = http.HandlerFunc(handlers.RouteNotFound)
+	router.MethodNotAllowedHandler = http.HandlerFunc(handlers.MethodNotAllowed)
 
 	fmt.Println("Server running :8080")
 	log.Fatal(http.ListenAndServe(":8080", router))
